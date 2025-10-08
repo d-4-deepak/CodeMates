@@ -1,21 +1,22 @@
 const express = require("express");
-
+const {adminAuth,userAuth} = require("./middlewares/auth");
 const app = express();
 
-app.use("/user",(req,res,next)=>{
-    //  res.send("1st route handler")
-    next();
-},
-(req,res,next)=>{
-    next()
-    // res.send("2nd route handler")
-},
-(req,res)=>{
-    console.log("djdj");
-    
-    res.send("3rd route handler")
-},
-)
+
+
+app.use("/admin",adminAuth)
+app.use("/user",userAuth,(req,res)=>{
+    res.send("user Data Sent")
+})
+
+app.use("/admin/getAllData",(req,res)=>{
+    res.send("all data send");
+})
+
+app.use("/admin/DeleteUser",(req,res)=>{
+    res.send("user deleted");
+})
+
 app.listen(7777,()=>{
     console.log("server is running successfully");
     
