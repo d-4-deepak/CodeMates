@@ -1,35 +1,31 @@
 const express = require("express");
 const {adminAuth,userAuth} = require("./middlewares/auth");
-require("./config/database")
+const {connectDB} = require("./config/database")
+const User = require("./models/user")
 const app = express();
 
-
-app.use("/",(err,req,res,next)=>{
-    if(err){
-        res.status(500).send("something went wrong")
-    }
+app.post("/signup",async (req,res)=>{
+    // creating a new instance of user model
+    const user = new User({
+        firstName: "Sachin",
+        lastName: "Tendulkar",
+        emailId: "st@gmail.com",
+        password: "sachin@123",
+    });
+   try{
+    await user.save();
+    res.send("user added succesfully!")
+   }catch(err){
+    res.status(400).send("Error saving the user: "+ err.message)
+   }
 })
 
-app.use("/admin",(req,res)=>{
-    // try{
-    //     throw new Error("dueduh")
-    //     res.send("user Data Sent")
-    // }catch{
-    //     res.status(500).send("hanldled error using try and catch");
-    // }
-       throw new Error("dueduh")
-      res.send("user Data Sent")
- 
-})
-
-app.use("/",(err,req,res,next)=>{
-    if(err){
-        res.status(500).send("something went wrong")
-    }
-})
-
-
+connectDB().then(()=>{
+console.log("conn is established ")
 app.listen(7777,()=>{
     console.log("server is running successfully");
     
-});
+})
+}).catch((err)=>{
+    console.error("conn not established")
+})
