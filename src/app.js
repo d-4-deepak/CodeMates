@@ -1,21 +1,33 @@
 const express = require("express");
 const {adminAuth,userAuth} = require("./middlewares/auth");
+require("./config/database")
 const app = express();
 
 
-
-app.use("/admin",adminAuth)
-app.use("/user",userAuth,(req,res)=>{
-    res.send("user Data Sent")
+app.use("/",(err,req,res,next)=>{
+    if(err){
+        res.status(500).send("something went wrong")
+    }
 })
 
-app.use("/admin/getAllData",(req,res)=>{
-    res.send("all data send");
+app.use("/admin",(req,res)=>{
+    // try{
+    //     throw new Error("dueduh")
+    //     res.send("user Data Sent")
+    // }catch{
+    //     res.status(500).send("hanldled error using try and catch");
+    // }
+       throw new Error("dueduh")
+      res.send("user Data Sent")
+ 
 })
 
-app.use("/admin/DeleteUser",(req,res)=>{
-    res.send("user deleted");
+app.use("/",(err,req,res,next)=>{
+    if(err){
+        res.status(500).send("something went wrong")
+    }
 })
+
 
 app.listen(7777,()=>{
     console.log("server is running successfully");
