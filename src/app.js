@@ -6,6 +6,11 @@ const app = express();
 
 app.use(express.json());
 
+app.use((err, req, res, next) => {
+     res.status(400).send({ error: "Invalid JSON format" });
+  });
+
+
 app.post("/signup",async (req,res)=>{
     const user = new User(req.body);
    try{
@@ -82,12 +87,11 @@ app.patch("/user", async (req,res)=>{
         return res.status(400).send("userId is required");
     }
     const dataToUpdate = req.body;
-    console.log(userId);
     
-    const updateUser = await User.findByIdAndUpdate(userId,dataToUpdate,{returnDocument:"after"});
-    console.log(updateUser);
+    
     
     try{
+        const updateUser = await User.findByIdAndUpdate(userId,dataToUpdate,{returnDocument:"after",runValidators: true});
         if(!updateUser){
 
             res.status(404).send("user not found!")
@@ -95,9 +99,10 @@ app.patch("/user", async (req,res)=>{
             res.send("user updated successfully")
         }
     }catch(err){
-        res.status(400).send("something went wrong")
+        res.status(400).send("data updation failed "+ err)
     }
 })
+
 
 connectDB().then(()=>{
 console.log("conn is established ")
