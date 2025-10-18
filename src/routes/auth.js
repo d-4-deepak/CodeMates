@@ -1,5 +1,6 @@
+const { userAuth } = require("../middlewares/auth");
 const User = require("../models/user")
-const validateSignupData = require("../utils/validation")
+const {validateSignupData} = require("../utils/validation")
 const bcrypt = require("bcrypt");
 
 
@@ -14,8 +15,9 @@ authRouter.post("/signup",async (req,res)=>{
     try{
      //data validation
      validateSignupData(req);
- 
+      req.body.password = req.body.password.trim()
      const {firstName,lastName,password,emailId} = req.body
+     
      
    //password encryption 
      const passwordHashed = await bcrypt.hash(password,10);
@@ -58,6 +60,14 @@ authRouter.post("/login", async (req,res)=>{
    }catch(err){
     res.status(400).send("ERROR : "+ err.message)
    }
+})
+
+authRouter.post("/logout",userAuth, async (req,res)=>{
+  const {token} = req.cookies
+  // res.clearCookie("token");
+  res.cookie("token",null,{expires: new Date(Date.now())});
+  res.status(200).send("user Logout successfully")
+ 
 })
 
 module.exports = authRouter;

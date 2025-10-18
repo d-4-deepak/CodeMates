@@ -13,6 +13,7 @@ const userAuth = async (req,res,next)=>{
     if(!user){
         throw new Error("User not Found!");
     }
+    //attached user to the req
     req.user = user;
     next();
    }catch(err){

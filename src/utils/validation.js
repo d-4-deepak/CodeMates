@@ -15,4 +15,11 @@ const validateSignupData = (req)=>{
         throw new Error("Password must contain 1 uppercase, 1 lowercase, 1 number, 1 special char, and be at least 8 characters long")
     }
 }
-module.exports = validateSignupData
+
+const validateEditProfile = (req)=>{
+    const allowedEditFields = ["firstName", "lastName","emailId","age","gender","photoUrl","about","skills"];
+
+  const isAllowed =   Object.keys(req.body).every((key)=>allowedEditFields.includes(key));
+  return isAllowed;
+}
+module.exports = {validateSignupData, validateEditProfile}
